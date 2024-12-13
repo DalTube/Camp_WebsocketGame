@@ -10,19 +10,26 @@ const socket = io('http://localhost:3000', {
 });
 
 let userId = null; //기본 null
+let stages = null;
+let items = null;
+let itemUnlocks = null;
 
 // response 라는 이벤트명으로 받음 (Message 용)
 socket.on('response', (data) => {
-  console.log(data);
+  console.log('response : ', data);
 });
 
 // connection 이라는 이벤트명으로 받음
 socket.on('connection', (data) => {
   console.log('connection: ', data);
   userId = data.uuid;
+  stages = data.assets.stages;
+  items = data.assets.items;
+  itemUnlocks = data.assets.itemUnlocks;
 });
 
-const sendEvent = (handlerId, payload) => {
+export const sendEvent = (handlerId, payload) => {
+  console.log('#클라이언트 sendEvent');
   //'event' 라는 이벤트로 서버에 보냄
   socket.emit('event', {
     userId,
@@ -32,4 +39,7 @@ const sendEvent = (handlerId, payload) => {
   });
 };
 
-export { sendEvent };
+//게임 데이터 테이블 정보 조회
+export const getGameAssets = () => {
+  return { stages, items, itemUnlocks };
+};
