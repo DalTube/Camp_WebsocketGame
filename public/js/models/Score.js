@@ -1,4 +1,4 @@
-import { sendEvent } from './Socket.js';
+import { sendEvent } from '../websocket/Socket.js';
 
 class Score {
   score = 0;

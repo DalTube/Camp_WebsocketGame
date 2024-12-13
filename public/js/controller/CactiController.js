@@ -1,4 +1,4 @@
-import Cactus from './Cactus.js';
+import Cactus from '../models/Cactus.js';
 
 class CactiController {
   CACTUS_INTERVAL_MIN = 500;

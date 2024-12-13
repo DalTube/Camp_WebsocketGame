@@ -1,4 +1,4 @@
-import { CLIENT_VERSION } from './Constants.js';
+import { CLIENT_VERSION } from '../Constants.js';
 
 //이 주소로 연결 하겠다
 //io는 html파일에 있는 socket 라이브러리
