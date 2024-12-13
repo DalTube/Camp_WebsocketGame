@@ -1,9 +1,13 @@
 import { sendEvent } from '../websocket/Socket.js';
+import { getGameAssets } from '../websocket/Socket.js';
 
 class Score {
   score = 0;
   HIGH_SCORE_KEY = 'highScore';
-  stageChange = true;
+  stageChange = false;
+
+  /*** 추가 변수 */
+  second = 0; //초
 
   constructor(ctx, scaleRatio) {
     this.ctx = ctx;
@@ -11,13 +15,35 @@ class Score {
     this.scaleRatio = scaleRatio;
   }
 
-  update(deltaTime) {
-    this.score += deltaTime * 0.001;
-    // 점수가 100점 이상이 될 시 서버에 메세지 전송
-    if (Math.floor(this.score) === 5 && this.stageChange) {
-      this.stageChange = false;
-      sendEvent(11, { currentStage: 1000, targetStage: 1001 });
+  update(deltaTime, currentStageData, targetStageData) {
+    this.stageChange = false;
+    this.second += deltaTime * 0.001;
+
+    //1초가 지날때마다 점수 변경
+    if (this.second >= 1) {
+      this.second = 0; //초기화
+      this.score += currentStageData.scorePerSecond; //점수 획득
     }
+
+    /***
+     * 다음 스테이지 데이터가 있고 현재 점수가 다음 스테이지의 진입 점수 이상이면 스테이지 변경
+     */
+    if (targetStageData && this.score >= targetStageData.score) {
+      this.stageChange = true;
+      sendEvent(11, { currentStage: currentStageData.id, targetStage: targetStageData.id });
+    }
+
+    // 점수가 100점 이상이 될 시 서버에 메세지 전송
+    // if (Math.floor(this.score) === targetStageData.score && this.stageChange) {
+    //   console.log(currentStageData.id);
+    //   this.stageChange = false;
+    //   sendEvent(11, { currentStage: currentStageData.id, targetStage: targetStageData.id });
+    // }
+    return this.stageChange;
+  }
+
+  setStageChange(value) {
+    this.stageChange = value;
   }
 
   getItem(itemId) {
