@@ -1,18 +1,17 @@
-import e from 'express';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 //import.meta.url : 현재 파일의 절대 경로를 불러옴;
 const __filename = fileURLToPath(import.meta.url);
-console.log('__filename : ', __filename);
+// console.log('__filename : ', __filename);
 //현재 path의 상위 경로
 const __dirname = path.dirname(__filename);
-console.log('__dirname : ', __dirname);
+// console.log('__dirname : ', __dirname);
 //최상위 경로 + assets 폴더
 //기준 경로에서 , 뒤의
 const basePath = path.join(__dirname, '../../assets');
-console.log('basePath : ', basePath);
+// console.log('basePath : ', basePath);
 
 let gameAssets = {};
 
