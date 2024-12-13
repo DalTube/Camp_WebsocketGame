@@ -39,12 +39,13 @@ app.use('/pages', [PagesRouter]);
 
 app.get('/', authMiddleware, (req, res, next) => {
   //authMiddleware 에서 처리된 User정보가 없으면 로그인 페이지로 있으면 게임 페이지로
-  const user = req.user;
-  if (!user) {
-    res.redirect('/pages/sing-in');
-  } else {
-    res.redirect('/pages/games');
-  }
+  // const user = req.user;
+  // if (!user) {
+  //   res.redirect('/pages/sing-in');
+  // } else {
+  //   res.redirect('/pages/games');
+  // }
+  res.redirect('/pages/games');
 });
 
 initSocket(server);
