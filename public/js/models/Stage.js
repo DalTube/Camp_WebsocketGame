@@ -1,5 +1,6 @@
 class Stage {
   stage = 1;
+  stageId = null;
 
   constructor(ctx, scaleRatio) {
     this.ctx = ctx;
@@ -7,8 +8,9 @@ class Stage {
     this.scaleRatio = scaleRatio;
   }
 
-  update(targetStage) {
+  update(targetStage, targetStageId) {
     this.stage = targetStage;
+    this.stageId = targetStageId;
   }
 
   reset() {
@@ -17,6 +19,10 @@ class Stage {
 
   getStage() {
     return this.stage;
+  }
+
+  getStageId() {
+    return this.stageId;
   }
 
   draw() {
