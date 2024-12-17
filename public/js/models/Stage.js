@@ -13,8 +13,9 @@ class Stage {
     this.stageId = targetStageId;
   }
 
-  reset() {
+  reset(stageId) {
     this.stage = 1;
+    this.stageId = stageId;
   }
 
   getStage() {
