@@ -1,4 +1,5 @@
 import { CLIENT_VERSION } from '../Constants.js';
+import { main } from '../game.js';
 
 //이 주소로 연결 하겠다
 //io는 html파일에 있는 socket 라이브러리
@@ -17,6 +18,10 @@ let itemUnlocks = null;
 // response 라는 이벤트명으로 받음 (Message 용)
 socket.on('response', (data) => {
   console.log('response : ', data);
+  if (data.status === 'fail') {
+    alert(data.message);
+    location.reload(true);
+  }
 });
 
 // connection 이라는 이벤트명으로 받음
@@ -26,10 +31,11 @@ socket.on('connection', (data) => {
   stages = data.assets.stages;
   items = data.assets.items;
   itemUnlocks = data.assets.itemUnlocks;
+  main();
+  //서큘러 디펜던시
 });
 
 export const sendEvent = (handlerId, payload) => {
-  console.log('#클라이언트 sendEvent');
   //'event' 라는 이벤트로 서버에 보냄
   socket.emit('event', {
     userId,
