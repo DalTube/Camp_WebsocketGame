@@ -24,21 +24,15 @@ class Score {
       this.second = 0; //초기화
       this.score += currentStageData.scorePerSecond; //점수 획득
     }
-
+    Math.floor(this.score) === 10 && this.stageChage;
     /***
      * 다음 스테이지 데이터가 있고 현재 점수가 다음 스테이지의 진입 점수 이상이면 스테이지 변경
      */
     if (targetStageData && this.score >= targetStageData.score) {
       this.stageChange = true;
-      sendEvent(11, { currentStage: currentStageData.id, targetStage: targetStageData.id });
+      sendEvent(11, { currentStage: currentStageData.id, targetStage: targetStageData.id, score: this.score });
     }
 
-    // 점수가 100점 이상이 될 시 서버에 메세지 전송
-    // if (Math.floor(this.score) === targetStageData.score && this.stageChange) {
-    //   console.log(currentStageData.id);
-    //   this.stageChange = false;
-    //   sendEvent(11, { currentStage: currentStageData.id, targetStage: targetStageData.id });
-    // }
     return this.stageChange;
   }
 
