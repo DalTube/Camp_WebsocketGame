@@ -224,7 +224,7 @@ export const main = () => {
     ground.reset();
     cactiController.reset();
     score.reset();
-    stage.reset();
+    stage.reset(START_STAGE_ID);
     gameSpeed = GAME_SPEED_START;
     itemController.reset(START_STAGE_ID);
 
