@@ -3,7 +3,7 @@ import Item from '../models/Item.js';
 class ItemController {
   INTERVAL_MIN = 0;
   // INTERVAL_MAX = 12000;
-  INTERVAL_MAX = 5000;
+  INTERVAL_MAX = 1000;
 
   nextInterval = null;
   items = [];
@@ -18,7 +18,10 @@ class ItemController {
     this.speed = speed;
 
     this.setItemUnlockAsset(itemUnlockAsset, currentStageId);
-    this.setNextItemTime();
+
+    if (this.itemSpawnCount > 0) {
+      this.setNextItemTime();
+    }
   }
 
   setItemUnlockAsset(itemUnlockAsset, currentStageId) {
@@ -29,7 +32,9 @@ class ItemController {
   //해금 가능한 아이템 정보 찾기
   checkItemUnlockAssetByStageId(currentStageId) {
     this.itemUnlockAsset.forEach((item) => {
-      if (item.stage_id === currentStageId) this.itemSpawnCount++;
+      if (item.stage_id === currentStageId) {
+        this.itemSpawnCount++;
+      }
     });
   }
 
@@ -44,7 +49,7 @@ class ItemController {
   }
 
   createItem() {
-    const index = this.getRandomNumber(0, this.itemSpawnCount);
+    const index = this.getRandomNumber(0, this.itemSpawnCount - 1);
     //여기서 스테이지에 맞는 아이템을 랜덤 생성 해줘야함
     const itemInfo = this.itemImages[index];
     const x = this.canvas.width * 1.5;
@@ -87,8 +92,11 @@ class ItemController {
     }
   }
 
-  reset() {
+  //리셋
+  reset(currentStageId) {
     this.items = [];
+    this.itemSpawnCount = 0;
+    this.checkItemUnlockAssetByStageId(currentStageId);
   }
 }
 

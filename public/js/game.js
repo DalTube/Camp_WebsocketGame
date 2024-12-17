@@ -118,6 +118,7 @@ export const main = () => {
   // ------- 추가 --------------
   let stage = null;
   const MAX_GAME_STAGE = stageAsset.data.length;
+  const START_STAGE_ID = stageAsset.data[0].id;
 
   function createSprites() {
     // 비율에 맞는 크기
@@ -224,6 +225,7 @@ export const main = () => {
     score.reset();
     stage.reset();
     gameSpeed = GAME_SPEED_START;
+    itemController.reset(START_STAGE_ID);
 
     // 게임시작 핸들러ID 2, payload 에는 게임 시작 시간
     sendEvent(2, { timestamp: Date.now() });
@@ -301,7 +303,6 @@ export const main = () => {
      */
     const collideWithItem = itemController.collideWith(player);
     if (collideWithItem && collideWithItem.itemId) {
-      console.log(collideWithItem);
       score.getItem(collideWithItem.itemId, itemAsset);
     }
 
