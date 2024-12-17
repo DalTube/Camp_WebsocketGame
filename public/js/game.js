@@ -91,6 +91,7 @@ export const main = () => {
       width: 50 / 1.5,
       height: 50 / 1.5,
       id: item.id,
+      score: item.score,
       image: item.image,
     });
   });
@@ -154,11 +155,11 @@ export const main = () => {
       return {
         image,
         id: item.id,
+        score: item.score,
         width: item.width * scaleRatio,
         height: item.height * scaleRatio,
       };
     });
-
     //아이템 해금 정보, 첫스테이지Id 추가
     itemController = new ItemController(ctx, itemImages, scaleRatio, GROUND_SPEED, itemUnlockAsset.data, stageAsset.data[0].id);
 
@@ -303,7 +304,8 @@ export const main = () => {
      */
     const collideWithItem = itemController.collideWith(player);
     if (collideWithItem && collideWithItem.itemId) {
-      score.getItem(collideWithItem.itemId, itemAsset);
+      console.log(collideWithItem);
+      score.getItem(collideWithItem, stage.getStageId());
     }
 
     // draw
@@ -336,9 +338,7 @@ export const main = () => {
    * 게임 테이블 데이터를 가져오고 난 후 게임 실행을 위해 setTimeout 사용
    */
   // 게임 프레임을 다시 그리는 메서드
-  // setTimeout(() => {
   requestAnimationFrame(gameLoop);
-  // }, 500);
 
   window.addEventListener('keyup', reset, { once: true });
 };

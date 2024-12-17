@@ -6,8 +6,8 @@ export const createItem = (uuid) => {
 };
 
 // 유저의 아이템 획득 정보 추가
-export const setItem = (uuid, id, stage, timestamp) => {
-  return items[uuid].push({ id, stage, timestamp });
+export const setItem = (uuid, itemId, score, stageId, timestamp) => {
+  return items[uuid].push({ itemId, score, stageId, timestamp });
 };
 
 // 유저의 아이템 획득 목록 조회

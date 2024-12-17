@@ -1,4 +1,5 @@
 import Item from '../models/Item.js';
+import { sendEvent } from '../websocket/Socket.js';
 
 class ItemController {
   INTERVAL_MIN = 0;
@@ -48,16 +49,17 @@ class ItemController {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
-  createItem() {
+  createItem(currentStageId) {
     const index = this.getRandomNumber(0, this.itemSpawnCount - 1);
     //여기서 스테이지에 맞는 아이템을 랜덤 생성 해줘야함
     const itemInfo = this.itemImages[index];
     const x = this.canvas.width * 1.5;
     const y = this.getRandomNumber(10, this.canvas.height - itemInfo.height);
-
-    const item = new Item(this.ctx, itemInfo.id, x, y, itemInfo.width, itemInfo.height, itemInfo.image);
+    const item = new Item(this.ctx, itemInfo.id, x, y, itemInfo.width, itemInfo.height, itemInfo.image, itemInfo.score);
 
     this.items.push(item);
+
+    sendEvent(21, { itemId: itemInfo.id, currentStageId });
   }
 
   update(gameSpeed, deltaTime, currentStageId) {
@@ -88,6 +90,7 @@ class ItemController {
       this.ctx.clearRect(collidedItem.x, collidedItem.y, collidedItem.width, collidedItem.height);
       return {
         itemId: collidedItem.id,
+        score: collidedItem.score,
       };
     }
   }

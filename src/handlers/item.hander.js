@@ -1,5 +1,5 @@
 import { getGameAssets } from '../init/assets.js';
-import { setItem } from '../models/item.model.js';
+import { setItem, getItem } from '../models/item.model.js';
 
 /***
  * 아이템을 획득 했을 때 유효한 아이템인지 검증 처리
@@ -10,20 +10,22 @@ export const getItemHandler = (uuid, payload) => {
 
   // 2. 가져온 데이터 테이블의 데이터 존재여부 체크
   if (!items) {
-    return { stauts: 'fail', message: 'This item does not exist.' };
+    return { stauts: 'fail', message: 'No data table for item' };
   }
 
   if (!itemUnlocks) {
-    return { stauts: 'fail', message: 'This itemunlocks does not exist.' };
+    return { stauts: 'fail', message: 'No data table for itemunlock' };
   }
 
-  // 3. 유효한 아이템인지 검증
-  if (!items.data.some((item) => item.id === payload.itemId)) {
-    return { status: 'fail', message: 'Item not found' };
+  // 3. 유효한 아이템인지 검증 (itemId && Score)
+  if (!items.data.some((item) => item.id === payload.itemId && item.score === payload.score)) {
+    return { status: 'fail', message: 'Target item not found' };
   }
 
-  // 4. 아이템 정보 저장
-  setItem(uuid, id);
+  // 4. 아이템 정보 저장(uuid, itemId, score, stage, timestamp)
+  setItem(uuid, payload.itemId, payload.score, payload.currentStageId, payload.timestamp);
+  console.log('Item: ', getItem(uuid));
+  return { status: 'success' };
 };
 
 /***

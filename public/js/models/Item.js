@@ -1,5 +1,5 @@
 class Item {
-  constructor(ctx, id, x, y, width, height, image) {
+  constructor(ctx, id, x, y, width, height, image, score) {
     this.ctx = ctx;
     this.id = id;
     this.x = x;
@@ -7,6 +7,7 @@ class Item {
     this.width = width;
     this.height = height;
     this.image = image;
+    this.score = score;
   }
 
   update(speed, gameSpeed, deltaTime, scaleRatio) {
@@ -20,10 +21,7 @@ class Item {
   collideWith = (sprite) => {
     const adjustBy = 1.4;
     const result =
-      this.x < sprite.x + sprite.width / adjustBy &&
-      this.x + this.width / adjustBy > sprite.x &&
-      this.y < sprite.y + sprite.height / adjustBy &&
-      this.y + this.height / adjustBy > sprite.y;
+      this.x < sprite.x + sprite.width / adjustBy && this.x + this.width / adjustBy > sprite.x && this.y < sprite.y + sprite.height / adjustBy && this.y + this.height / adjustBy > sprite.y;
 
     if (result) {
       this.width = 0;
