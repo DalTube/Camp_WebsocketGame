@@ -3,6 +3,7 @@
 import { getGameAssets } from '../init/assets.js';
 import { getStage, setStage } from '../models/stage.model.js';
 import { getItem } from '../models/item.model.js';
+import { SCORE_TOLERANCE } from '../cosntants.js';
 
 export const moveStageHandler = (userId, payload) => {
   // 1.유저의 스테이지 정보 불러오기
@@ -14,7 +15,6 @@ export const moveStageHandler = (userId, payload) => {
   // 2.오름차순으로 정렬하여 ID값이 큰 스테이지를 확인(제일 큰 값이 유저의 현재 스테이지)
   currentStages.sort((a, b) => a.id - b.id);
   const currentStage = currentStages[currentStages.length - 1];
-  console.log(currentStage);
 
   // 3. 클라이언트와 서버의 현재 스테이지가 맞는지 체크
   if (currentStage.id !== payload.currentStage) {
@@ -33,47 +33,47 @@ export const moveStageHandler = (userId, payload) => {
    *    ex) 1스테이지 = 1점 per 1s 인경우 2스테이지의 진입점수가 10점이면 10초가 경과해야한다. 그런데 중간에 1점자리 아이템을 1개 먹었을 경우 9초만에 진입 됨.
    * c. 오차시간 체크 필요. (5% => 임의로 정한 오차범위)
    *  - 통신 과정에서 딜레이가 발생할 수 있기에 임의의 오차 범위를 적용.
-   *
-   * d.
    */
 
   // 5-1. 기본 유효시간 계산
   const serverTime = Date.now(); // 현재 타임스탬프
   //유효시간 = 경과 시간(현재시간-현재 스테이지 진입시간) * 현재 스테이지의 초당 획득 점수
-  const elapsedTime = (serverTime - currentStage.timestamp) / 1000;
+  // const elapsedTime = (serverTime - currentStage.timestamp) / 1000;
+  //유효점수 = 유효시간 * 초당 점수
+  const elapsedScore = ((serverTime - currentStage.timestamp) / 1000) * stages.data[currentStages.length - 1].scorePerSecond;
 
-  const elapsedScore = elapsedTime * stages.data[currentStages.length - 1].scorePerSecond;
-  console.log('elapsedTime : ', elapsedTime, ' elapsedScore : ', elapsedScore);
-
-  //노아이템 10초  10점  10점 1
-  //아이템    9초  10점  10점
-  //아이템    8~9초  10점  13점
-  //          7초   20점   20점
-  // elapsedTime :  9.792  elapsedScore :  9.792
-  // elapsedTime :  15.002  elapsedScore :  30.004
-
-  // 5-2. 아이템 획득 점수를 반영하여 유효시간 재계산
-  let currentItems = getItem(userId);
-
-  // 5-3. 오차시간 적용하여 유효시간 검증
-  const baseScoreTime = stages.data[currentStages.length].score - currentStage.score;
-  // console.log(baseScoreTime, baseScoreTime * 0.95, baseScoreTime * 1.05);
-  if (elapsedTime < baseScoreTime * 0.95 || elapsedTime > baseScoreTime * 1.05) {
-    return { status: 'fail', message: `Invalud elapsed Time : ${elapsedTime}` };
+  // 5-2. 현재 스테이지에서 얻은 아이템의 총 점수 계산
+  let sumItemScore = 0;
+  const userItems = getItem(userId);
+  if (userItems.length > 0) {
+    userItems.forEach((item) => {
+      if (item.stageId === payload.currentStage) {
+        sumItemScore += item.score;
+      }
+    });
   }
 
-  //다음 스테이지 targetStage 대한 검증 <- 게임에셋에 존재하는가?
+  // 5-3. 오차시간 적용하여 유효시간 검증
+  //TargetScore : 현재점수 - 이전 스테이지 점수 - 현재 스테이지에서 획득한 아이템 총 점수
+  const targetScore = payload.score - stages.data[currentStages.length - 1].score - sumItemScore;
+  if (elapsedScore < targetScore - 5 || elapsedScore > targetScore + SCORE_TOLERANCE) {
+    console.log('elapsedScore : ', elapsedScore, ' targetScore : ', targetScore);
+    return { status: 'fail', message: `Invalud elapsed Time : ${elapsedScore}` };
+  }
 
-  //some() 내장 메소드
   //조건문에 1개라도 맞으면 true 반환
   if (!stages.data.some((stage) => stage.id === payload.targetStage)) {
+    //some() 내장 메소드
     return { status: 'fail', message: 'Target stage not found' };
   }
 
   //현재 획득한 점수가 다음 스테이지의 진입 점수보다 같거나 큰지 체크
+  if (payload.score < stages.data[currentStages.length].score) {
+    return { status: 'fail', message: 'Target stage not found' };
+  }
 
   //이상 없으면 다음 스테이지 설정
   setStage(userId, payload.targetStage, serverTime, payload.score);
-  console.log('Stage Change Success : ', getStage(userId));
-  return { status: 'success' };
+
+  return { status: 'success', message: 'Stage Change Success' };
 };

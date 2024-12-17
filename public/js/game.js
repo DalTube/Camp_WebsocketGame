@@ -296,7 +296,7 @@ export const main = () => {
       setupGameReset();
 
       // 게임종료 핸들러ID 3, payload 에는 게임 시작 시간
-      sendEvent(3, { timestamp: Date.now() });
+      sendEvent(3, { score: score.getScore(), timestamp: Date.now() });
     }
 
     /***
@@ -304,7 +304,6 @@ export const main = () => {
      */
     const collideWithItem = itemController.collideWith(player);
     if (collideWithItem && collideWithItem.itemId) {
-      console.log(collideWithItem);
       score.getItem(collideWithItem, stage.getStageId());
     }
 
