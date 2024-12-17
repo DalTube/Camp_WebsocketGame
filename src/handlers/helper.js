@@ -2,6 +2,7 @@ import { CLIENT_VERSION } from '../cosntants.js';
 import { createStage } from '../models/stage.model.js';
 import { getUser, removeUser } from '../models/user.mode.js';
 import handlerMappings from './handlerMapping.js';
+import { getGameAssets } from '../init/assets.js';
 
 export const handleDisconnect = (socket, uuid) => {
   removeUser(socket.id);
@@ -16,12 +17,14 @@ export const handleDisconnect = (socket, uuid) => {
 export const handleConnection = (socket, uuid) => {
   console.log(`New user connected!: ${uuid} with socket ID ${socket.id}`);
   console.log('Current users : ', getUser());
-
+  const assets = getGameAssets();
   createStage(uuid);
-  socket.emit('connection', { uuid });
+
+  socket.emit('connection', { uuid, assets });
 };
 
 export const handlerEvent = (io, socket, data) => {
+  //클라이언트 버전 체크
   if (!CLIENT_VERSION.includes(data.clientVersion)) {
     socket.emit('response', { status: 'fail', message: 'Client version mismatch' });
     return;
