@@ -29,7 +29,7 @@ export const getItemHandler = (uuid, payload) => {
 /***
  * 아이템이 생성되었을 때 정상적인 아이템이 생성된 것인지 확인
  */
-export const createItemHandler = (payload) => {
+export const createItemHandler = (uuid, payload) => {
   // 1. 데이터 테이블에서 아이템, 아이템 해제 정보 가져오기
   const { items, itemUnlocks } = getGameAssets();
 
@@ -40,8 +40,10 @@ export const createItemHandler = (payload) => {
 
   // 3. 아이템 해금 데이터 검증
   itemUnlocks.data.forEach((itemUnlock) => {
-    if (itemUnlock.item_id === payload.itemId && itemUnlock.stage_id > payload.stageId) {
+    if (itemUnlock.item_id === payload.itemId && itemUnlock.stage_id > payload.currentStageId) {
       return { status: 'fail', message: 'The correct item was not created.' };
     }
   });
+
+  return { status: 'success' };
 };
