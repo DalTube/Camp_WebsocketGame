@@ -26,6 +26,12 @@ socket.on('response', (data) => {
     alert(data.message);
     location.reload(true);
   }
+
+  //broadcast
+  if (data.broadcast) {
+    logsDraw(data.message);
+    highScore.data.score;
+  }
 });
 
 // connection 이라는 이벤트명으로 받음
@@ -81,6 +87,11 @@ export const setUserId = (uuid) => {
   return userId;
 };
 
-export const getUserId = () => {
-  return userId;
+// export const getUserId = () => {
+//   return userId;
+// };
+
+//최고 점수 조회
+export const getHighScore = () => {
+  return highScore;
 };

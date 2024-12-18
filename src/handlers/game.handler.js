@@ -2,6 +2,7 @@ import { getGameAssets } from '../init/assets.js';
 import { clearStage, getStage, setStage } from '../models/stage.model.js';
 import { clearItem, getItem } from '../models/item.model.js';
 import { SCORE_TOLERANCE } from '../cosntants.js';
+import redisClient from '../utils/redis/redis.js';
 
 export const gameStart = (uuid, payload) => {
   const { stages } = getGameAssets();
@@ -13,7 +14,7 @@ export const gameStart = (uuid, payload) => {
   return { status: 'success' };
 };
 
-export const gameEnd = (uuid, payload) => {
+export const gameEnd = async (uuid, payload) => {
   // 클라이언트는 게임 종료 시 타임스탬프와 총 점수
   const { timestamp: gameEndTime, score } = payload;
   const userStages = getStage(uuid);
@@ -64,10 +65,23 @@ export const gameEnd = (uuid, payload) => {
     return { status: 'fail', message: 'score verification failed' };
   }
 
-  // DB 저장한다고 가정을 한다면
-  // 저장
-  // setResult(userId,score,timeStamp)
-
-  return { status: 'success', message: 'Game Over', score };
-  // return { status: 'success', boreadcast: true, score };
+  // 최고 점수 확인 후 갱신 여부 처리
+  const highScore = await redisClient.hGetAll('HIGH_SCORE', 0, 1);
+  if (Object.keys(highScore).length === 0) {
+    await redisClient.hSet('HIGH_SCORE', uuid, score);
+    // 신기록 달성
+    return { broadcast: true, status: 'success', message: `${uuid} 님이 최고 점수를 갱신하셨습니다 !!! [점수: ${score}]`, score };
+  } else {
+    if (score > Number(Object.values(highScore)[0])) {
+      //신기록 달성
+      console.log('신기록 달성!!!!');
+      const a = await redisClient.hDel('HIGH_SCORE', Object.keys(highScore)[0]);
+      console.log('신기록 달성!!!!');
+      const b = await redisClient.hSet('HIGH_SCORE', uuid, score);
+      return { broadcast: true, status: 'success', message: `${uuid} 님이 최고 점수를 갱신하셨습니다 !!! [점수: ${score}]`, score };
+    } else {
+      return { status: 'success', message: 'Game Over' };
+    }
+  }
+  // return { broadcast: true, status: 'success', message: `${uuid} 님이 최고 점수를 갱신하셨습니다 !!! [점수: ${score}]`, score };
 };

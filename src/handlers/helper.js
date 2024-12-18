@@ -23,7 +23,7 @@ export const handleConnection = (socket, uuid, type) => {
   socket.emit('connection', { uuid, assets });
 };
 
-export const handlerEvent = (io, socket, data) => {
+export const handlerEvent = async (io, socket, data) => {
   //클라이언트 버전 체크
   if (!CLIENT_VERSION.includes(data.clientVersion)) {
     socket.emit('response', { status: 'fail', message: 'Client version mismatch' });
@@ -36,10 +36,10 @@ export const handlerEvent = (io, socket, data) => {
   }
 
   //찾은 핸들러를 실행
-  const response = handler(data.userId, data.payload);
+  const response = await handler(data.userId, data.payload);
 
   //모든 유저에게 보내야하는 경우
-  if (response.boreadcast) {
+  if (response.broadcast) {
     io.emit('response', response);
     return;
   }

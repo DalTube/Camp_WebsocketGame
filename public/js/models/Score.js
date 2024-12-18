@@ -1,5 +1,4 @@
 import { sendEvent } from '../websocket/Socket.js';
-import { getGameAssets } from '../websocket/Socket.js';
 
 class Score {
   score = 0;
@@ -25,6 +24,7 @@ class Score {
       this.score += currentStageData.scorePerSecond; //점수 획득
     }
     Math.floor(this.score) === 10 && this.stageChange;
+
     /***
      * 다음 스테이지 데이터가 있고 현재 점수가 다음 스테이지의 진입 점수 이상이면 스테이지 변경
      */
@@ -49,11 +49,13 @@ class Score {
     this.score = 0;
   }
 
-  setHighScore() {
+  setHighScore(highScore) {
+    // const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY));
+    //   if (this.score > highScore) {
+    //     localStorage.setItem(this.HIGH_SCORE_KEY, Math.floor(this.score));
+    //   }
     const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY));
-    if (this.score > highScore) {
-      localStorage.setItem(this.HIGH_SCORE_KEY, Math.floor(this.score));
-    }
+    localStorage.setItem(this.HIGH_SCORE_KEY, Math.floor(highScore));
   }
 
   getScore() {
