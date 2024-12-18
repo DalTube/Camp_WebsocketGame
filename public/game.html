@@ -30,11 +30,44 @@
       canvas {
         border: 2px solid grey;
       }
+      #logs {
+          height: 300px;
+          overflow-y: scroll;
+          border: 2px solid #ccc;
+          padding: 10px;
+          margin-top: 50px;
+      }
+      #inputDiv {
+        margin-bottom: 20px;
+      }
+      input {
+            width: 50%;
+            padding: 10px;
+            margin: 10px 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box; /* 패딩 포함 너비 계산 */
+        }
+
+        button {
+            width: 100px; /* 버튼 너비를 입력 필드와 동일하게 */
+            padding: 12px;
+            background-color: #818186;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            box-sizing: border-box;
+        }
     </style>
     <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
     <script src="/js/game.js" type="module"></script>
   </head>
   <body>
     <canvas id="game"></canvas>
+    <div id="logs"></div>
   </body>
 </html>
