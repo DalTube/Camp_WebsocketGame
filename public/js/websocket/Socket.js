@@ -1,13 +1,12 @@
-import { CLIENT_VERSION } from '../Constants.js';
+import { CLIENT_VERSION, USER_ID_KEY } from '../Constants.js';
 import { main } from '../game.js';
 
 let userId = null; //기본 null
-let highScore = null;
+let highScore = 0;
 let stages = null;
 let items = null;
 let itemUnlocks = null;
 const logs = [];
-const USER_ID_KEY = 'userId';
 
 //이 주소로 연결 하겠다
 //io는 html파일에 있는 socket 라이브러리
@@ -30,7 +29,7 @@ socket.on('response', (data) => {
   //broadcast
   if (data.broadcast) {
     logsDraw(data.message);
-    highScore.data.score;
+    highScore = Number(data.score);
   }
 });
 
@@ -38,15 +37,19 @@ socket.on('response', (data) => {
 socket.on('connection', (data) => {
   console.log('connection: ', data);
   userId = data.uuid;
-  highScore = data.highScore;
+  highScore = Number(data.highScore);
   stages = data.assets.stages;
   items = data.assets.items;
   itemUnlocks = data.assets.itemUnlocks;
 
   localStorage.setItem(USER_ID_KEY, userId);
 
-  document.getElementById('inputUserId').value = userId;
-  logsDraw(`'${userId}'님이 접속하셨습니다.`);
+  //하이스코어를 달성한 유저가 접속한 경우 특정 메세지를 전달한다
+  if (data.isHighScoreUser) {
+    logsDraw(`[최고 점수 보유자] ${userId}님이 접속하셨습니다.`);
+  } else {
+    logsDraw(`${userId} 님이 접속하셨습니다.`);
+  }
 
   main();
 });
@@ -86,10 +89,6 @@ export const setUserId = (uuid) => {
   userId = uuid;
   return userId;
 };
-
-// export const getUserId = () => {
-//   return userId;
-// };
 
 //최고 점수 조회
 export const getHighScore = () => {

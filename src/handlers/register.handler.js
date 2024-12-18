@@ -26,8 +26,10 @@ const registerHandler = (io) => {
           type = 'NEW';
         }
       }
+
       addUser({ uuid: userUUID, socketId: socket.id });
       handleConnection(socket, userUUID, type);
+
       //이벤트 소켓
       socket.on('event', (data) => handlerEvent(io, socket, data));
     } catch (error) {

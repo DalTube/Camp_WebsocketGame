@@ -1,47 +1,13 @@
-import { getGameAssets, sendEvent } from './websocket/Socket.js';
+import { getHighScore, getGameAssets, sendEvent } from './websocket/Socket.js';
 import Player from './models/Player.js';
 import Ground from './models/Ground.js';
 import CactiController from './controller/CactiController.js';
 import Score from './models/Score.js';
 import Stage from './models/Stage.js';
 import ItemController from './controller/ItemController.js';
-//9번 부터 main이라는 함수에 넣는다. 메인 이라는 함수를 실행했을대 1이 나온다.
 
 export const main = () => {
   const { stages: stageAsset, items: itemAsset, itemUnlocks: itemUnlockAsset } = getGameAssets();
-
-  // const stageAsset = {
-  //   name: 'stage',
-  //   version: '1.0.0',
-  //   data: [
-  //     { id: 1000, score: 0, scorePerSecond: 1 },
-  //     { id: 1001, score: 5, scorePerSecond: 2 },
-  //     { id: 1002, score: 20, scorePerSecond: 4 },
-  //     { id: 1003, score: 50, scorePerSecond: 8 },
-  //   ],
-  // };
-
-  // const itemAsset = {
-  //   name: 'item',
-  //   version: '1.0.0',
-  //   data: [
-  //     { id: 1, score: 10, image: '/images/items/pokeball_red.png' },
-  //     { id: 2, score: 20, image: '/images/items/pokeball_yellow.png' },
-  //     { id: 3, score: 30, image: '/images/items/pokeball_purple.png' },
-  //     { id: 4, score: 40, image: '/images/items/pokeball_cyan.png' },
-  //   ],
-  // };
-
-  // const itemUnlockAsset = {
-  //   name: 'item_unlock',
-  //   version: '1.0.0',
-  //   data: [
-  //     { id: 101, stage_id: 1001, item_id: 1 },
-  //     { id: 201, stage_id: 1002, item_id: 2 },
-  //     { id: 301, stage_id: 1002, item_id: 3 },
-  //     { id: 401, stage_id: 1002, item_id: 4 },
-  //   ],
-  // };
 
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
@@ -66,11 +32,6 @@ export const main = () => {
   const GROUND_SPEED = 0.5;
 
   // 선인장
-  // const CACTI_CONFIG = [
-  //   { width: 48 / 1.5, height: 100 / 1.5, image: 'images/cactus_1.png' },
-  //   { width: 98 / 1.5, height: 100 / 1.5, image: 'images/cactus_2.png' },
-  //   { width: 68 / 1.5, height: 70 / 1.5, image: 'images/cactus_3.png' },
-  // ];
   const CACTI_CONFIG = [
     { width: 48 / 1.5, height: 100 / 1.5, image: '/images/cactus_1.png' },
     { width: 98 / 1.5, height: 100 / 1.5, image: '/images/cactus_2.png' },
@@ -95,12 +56,6 @@ export const main = () => {
       image: item.image,
     });
   });
-  // const ITEM_CONFIG = [
-  //   { width: 50 / 1.5, height: 50 / 1.5, id: 1, image: 'images/items/pokeball_red.png' },
-  //   { width: 50 / 1.5, height: 50 / 1.5, id: 2, image: 'images/items/pokeball_yellow.png' },
-  //   { width: 50 / 1.5, height: 50 / 1.5, id: 3, image: 'images/items/pokeball_purple.png' },
-  //   { width: 50 / 1.5, height: 50 / 1.5, id: 4, image: 'images/items/pokeball_cyan.png' },
-  // ];
 
   // 게임 요소들
   let player = null;
@@ -120,6 +75,7 @@ export const main = () => {
   let stage = null;
   const MAX_GAME_STAGE = stageAsset.data.length;
   const START_STAGE_ID = stageAsset.data[0].id;
+  const logsDiv = document.getElementById('logs');
 
   function createSprites() {
     // 비율에 맞는 크기
@@ -184,6 +140,7 @@ export const main = () => {
     scaleRatio = getScaleRatio();
     canvas.width = GAME_WIDTH * scaleRatio;
     canvas.height = GAME_HEIGHT * scaleRatio;
+    logsDiv.style.width = GAME_WIDTH * scaleRatio + 'px';
     createSprites();
   }
 
@@ -292,7 +249,6 @@ export const main = () => {
      */
     if (!gameover && cactiController.collideWith(player)) {
       gameover = true;
-      score.setHighScore();
       setupGameReset();
 
       // 게임종료 핸들러ID 3, payload 에는 게임 시작 시간

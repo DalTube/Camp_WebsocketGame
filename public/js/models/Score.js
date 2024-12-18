@@ -1,4 +1,4 @@
-import { sendEvent } from '../websocket/Socket.js';
+import { sendEvent, getHighScore } from '../websocket/Socket.js';
 
 class Score {
   score = 0;
@@ -49,13 +49,11 @@ class Score {
     this.score = 0;
   }
 
-  setHighScore(highScore) {
-    // const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY));
-    //   if (this.score > highScore) {
-    //     localStorage.setItem(this.HIGH_SCORE_KEY, Math.floor(this.score));
-    //   }
-    const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY));
-    localStorage.setItem(this.HIGH_SCORE_KEY, Math.floor(highScore));
+  setHighScore(score) {
+    // const highScore = Number(localStorage.getItem(HIGH_SCORE_KEY));
+    // if (this.score > score) {
+    //   localStorage.setItem(HIGH_SCORE_KEY, Math.floor(score));
+    // }
   }
 
   getScore() {
@@ -63,7 +61,7 @@ class Score {
   }
 
   draw() {
-    const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY));
+    const highScore = Number(getHighScore());
     const y = 20 * this.scaleRatio;
 
     const fontSize = 20 * this.scaleRatio;

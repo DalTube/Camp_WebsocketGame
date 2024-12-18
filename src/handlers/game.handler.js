@@ -74,14 +74,11 @@ export const gameEnd = async (uuid, payload) => {
   } else {
     if (score > Number(Object.values(highScore)[0])) {
       //신기록 달성
-      console.log('신기록 달성!!!!');
-      const a = await redisClient.hDel('HIGH_SCORE', Object.keys(highScore)[0]);
-      console.log('신기록 달성!!!!');
-      const b = await redisClient.hSet('HIGH_SCORE', uuid, score);
+      await redisClient.hDel('HIGH_SCORE', Object.keys(highScore)[0]);
+      await redisClient.hSet('HIGH_SCORE', uuid, score);
       return { broadcast: true, status: 'success', message: `${uuid} 님이 최고 점수를 갱신하셨습니다 !!! [점수: ${score}]`, score };
     } else {
       return { status: 'success', message: 'Game Over' };
     }
   }
-  // return { broadcast: true, status: 'success', message: `${uuid} 님이 최고 점수를 갱신하셨습니다 !!! [점수: ${score}]`, score };
 };
