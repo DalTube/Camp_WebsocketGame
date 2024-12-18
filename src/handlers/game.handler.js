@@ -68,5 +68,6 @@ export const gameEnd = (uuid, payload) => {
   // 저장
   // setResult(userId,score,timeStamp)
 
-  return { status: 'success', message: 'Game ended', score };
+  return { status: 'success', message: 'Game Over', score };
+  // return { status: 'success', boreadcast: true, score };
 };

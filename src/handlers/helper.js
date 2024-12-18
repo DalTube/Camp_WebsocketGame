@@ -14,8 +14,8 @@ export const handleDisconnect = (socket, uuid) => {
 // 1스테이지, 0점 -> 1점씩
 // 2스테이지, 1000점 -> 2점씩
 
-export const handleConnection = (socket, uuid) => {
-  console.log(`New user connected!: ${uuid} with socket ID ${socket.id}`);
+export const handleConnection = (socket, uuid, type) => {
+  console.log(`${type === 'NEW' ? 'NEW u' : 'U'}ser connected!: ${uuid} with socket ID ${socket.id}`);
   console.log('Current users : ', getUser());
   const assets = getGameAssets();
   createStage(uuid);
@@ -40,7 +40,7 @@ export const handlerEvent = (io, socket, data) => {
 
   //모든 유저에게 보내야하는 경우
   if (response.boreadcast) {
-    io.emit('response', 'broadcast');
+    io.emit('response', response);
     return;
   }
 

@@ -3,25 +3,12 @@ import { createServer } from 'http';
 import initSocket from './init/socket.js';
 import { loadGameAssets } from './init/assets.js';
 import dotenv from 'dotenv';
-import redis from 'redis';
 import UsersRouter from './routes/api/users.router.js';
 import PagesRouter from './routes/pages/pages.router.js';
 import authMiddleware from './middlewares/auth.middleware.js';
 import cookieParser from 'cookie-parser';
 
 dotenv.config(); // env환경변수 파일 가져오기
-
-/*** Redis 연동 */
-const redisClient = redis.createClient();
-redisClient.connect();
-
-redisClient.on('connect', () => {
-  console.info('Redis connected!');
-});
-
-redisClient.on('error', (err) => {
-  console.error('Redis Client Error', err);
-});
 
 /*** Express */
 const app = express();
@@ -32,7 +19,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
-// app.use(express.static('public/js')); //정적 서빙
 
 app.use('/api', [UsersRouter]);
 app.use('/pages', [PagesRouter]);
