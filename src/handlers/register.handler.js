@@ -7,7 +7,7 @@ const registerHandler = (io) => {
   io.on('connection', async (socket) => {
     try {
       //브라우저 LocalStorage의 userId
-      //null이 string으로 넘어옴
+      //없으면 null 값에 string 타입으로 넘어옴
       let userUUID = socket.handshake.query.userId;
       let type = null;
 
@@ -30,18 +30,21 @@ const registerHandler = (io) => {
       addUser({ uuid: userUUID, socketId: socket.id });
       handleConnection(socket, userUUID, type);
 
-      //이벤트 소켓
-      socket.on('event', (data) => handlerEvent(io, socket, data));
-    } catch (error) {
       //접속 해제시 이벤트
       socket.on('disconnect', (socket) => {
         handleDisconnect(socket, userUUID);
       });
+
+      //이벤트 소켓
+      socket.on('event', (data) => handlerEvent(io, socket, data));
+    } catch (error) {
+      handleDisconnect(socket, userUUID);
       throw new Error('Failed to socket connetion : ' + error.message);
     }
   });
 };
 
+//uuid를 생성하는 함수
 const createUUID = async () => {
   try {
     let userUUID = '';

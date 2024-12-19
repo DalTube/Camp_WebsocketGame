@@ -25,7 +25,7 @@ export const getItemHandler = (uuid, payload) => {
   // 4. 아이템 정보 저장(uuid, itemId, score, stage, timestamp)
   setItem(uuid, payload.itemId, payload.score, payload.currentStageId, payload.timestamp);
   // console.log('Item: ', getItem(uuid));
-  return { status: 'success' };
+  return { status: 'success', message: 'Getting item is success' };
 };
 
 /***
@@ -47,5 +47,5 @@ export const createItemHandler = (uuid, payload) => {
     }
   });
 
-  return { status: 'success' };
+  return { status: 'success', message: 'create item is success' };
 };

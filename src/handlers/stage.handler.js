@@ -75,5 +75,5 @@ export const moveStageHandler = (userId, payload) => {
   //이상 없으면 다음 스테이지 설정
   setStage(userId, payload.targetStage, serverTime, payload.score);
 
-  return { status: 'success', message: 'Stage Change Success' };
+  return { status: 'success', message: 'Stage change success' };
 };

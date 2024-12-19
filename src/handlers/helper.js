@@ -55,7 +55,6 @@ export const handlerEvent = async (io, socket, data) => {
 
   //찾은 핸들러를 실행
   const response = await handler(data.userId, data.payload);
-  console.log(response);
   //모든 유저에게 보내야하는 경우
   if (response.broadcast) {
     io.emit('response', response);
