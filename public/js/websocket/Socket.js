@@ -1,5 +1,5 @@
 import { CLIENT_VERSION, USER_ID_KEY } from '../Constants.js';
-import { main } from '../game.js';
+import { main } from '../index.js';
 
 let userId = null; //기본 null
 let highScore = 0;
