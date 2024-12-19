@@ -15,7 +15,7 @@ const PORT = 3000;
 
 app.use(
   cors({
-    origin: 'http://localhost:3000', // 허용할 도메인
+    origin: 'http://43.203.203.28:3000', // 허용할 도메인
     credentials: true, // 쿠키 전달 허용
   }),
 );
