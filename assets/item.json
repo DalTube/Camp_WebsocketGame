@@ -1,0 +1,10 @@
+{
+  "name": "item",
+  "version": "1.0.0",
+  "data": [
+    { "id": 1, "score": 1, "image": "/images/items/pokeball_red.png" },
+    { "id": 2, "score": 2, "image": "/images/items/pokeball_yellow.png" },
+    { "id": 3, "score": 3, "image": "/images/items/pokeball_purple.png" },
+    { "id": 4, "score": 4, "image": "/images/items/pokeball_cyan.png" }
+  ]
+}
