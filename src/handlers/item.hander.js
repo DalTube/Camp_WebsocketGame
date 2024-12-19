@@ -1,5 +1,5 @@
 import { getGameAssets } from '../init/assets.js';
-import { setItem, getItem } from '../models/item.model.js';
+import { setItem } from '../models/item.model.js';
 
 /***
  * 아이템을 획득 했을 때 유효한 아이템인지 검증 처리
@@ -22,7 +22,14 @@ export const getItemHandler = (uuid, payload) => {
     return { status: 'fail', message: 'Target item not found' };
   }
 
-  // 4. 아이템 정보 저장(uuid, itemId, score, stage, timestamp)
+  // 4. 아이템 해금 스테이지 검증
+  itemUnlocks.data.forEach((itemUnlock) => {
+    if (itemUnlock.item_id === payload.itemId && itemUnlock.stage_id > payload.currentStageId) {
+      return { status: 'fail', message: 'The correct item was not created.' };
+    }
+  });
+
+  // 5. 아이템 정보 저장(uuid, itemId, score, stage, timestamp)
   setItem(uuid, payload.itemId, payload.score, payload.currentStageId, payload.timestamp);
   // console.log('Item: ', getItem(uuid));
   return { status: 'success', message: 'Getting item is success' };
