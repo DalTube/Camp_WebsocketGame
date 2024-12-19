@@ -2,10 +2,7 @@ import express from 'express';
 import { createServer } from 'http';
 import initSocket from './init/socket.js';
 import { loadGameAssets } from './init/assets.js';
-import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
-
-dotenv.config(); // env환경변수 파일 가져오기
 
 /*** Express */
 const app = express();
