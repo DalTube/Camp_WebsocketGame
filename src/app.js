@@ -12,6 +12,13 @@ const app = express();
 const server = createServer(app);
 const PORT = 3000;
 
+app.use(
+  cors({
+    origin: 'http://43.203.203.28:3000', // 허용할 도메인
+    credentials: true, // 쿠키 전달 허용
+  }),
+);
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
