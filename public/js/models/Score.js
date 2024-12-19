@@ -23,8 +23,6 @@ class Score {
       this.second = 0; //초기화
       this.score += currentStageData.scorePerSecond; //점수 획득
     }
-    Math.floor(this.score) === 10 && this.stageChange;
-
     /***
      * 다음 스테이지 데이터가 있고 현재 점수가 다음 스테이지의 진입 점수 이상이면 스테이지 변경
      */
