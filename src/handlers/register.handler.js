@@ -31,7 +31,7 @@ const registerHandler = (io) => {
       handleConnection(socket, userUUID, type);
 
       //접속 해제시 이벤트
-      socket.on('disconnect', (socket) => {
+      socket.on('disconnect', () => {
         handleDisconnect(socket, userUUID);
       });
 

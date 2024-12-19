@@ -22,7 +22,7 @@ export const moveStageHandler = (userId, payload) => {
   }
 
   // 4. 추가 검증에 사용할 스테이지 테이블 데이터 조회
-  const { stages, items } = getGameAssets(); //스테이지 정보를 불러온다
+  const { stages } = getGameAssets(); //스테이지 정보를 불러온다
 
   /*** 5. 점수 검증 로직
    * a. 경과 시간(초 단위)에 따른 점수를 획득.
