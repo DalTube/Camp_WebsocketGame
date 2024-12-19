@@ -10,7 +10,7 @@ const logs = [];
 
 //이 주소로 연결 하겠다
 //io는 html파일에 있는 socket 라이브러리
-const socket = io('http://localhost:3000', {
+const socket = io('ws://localhost:3000', {
   //컨넥션 시도 시에도 클라이언트 버전을 보내기 위한 용도
   query: {
     clientVersion: CLIENT_VERSION,
