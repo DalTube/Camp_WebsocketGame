@@ -49,11 +49,11 @@ class Score {
     this.score = 0;
   }
 
-  setHighScore(score) {
-    // const highScore = Number(localStorage.getItem(HIGH_SCORE_KEY));
-    // if (this.score > score) {
-    //   localStorage.setItem(HIGH_SCORE_KEY, Math.floor(score));
-    // }
+  setHighScore() {
+    const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY));
+    if (this.score > highScore) {
+      localStorage.setItem(this.HIGH_SCORE_KEY, Math.floor(this.score));
+    }
   }
 
   getScore() {

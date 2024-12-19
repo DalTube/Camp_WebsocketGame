@@ -21,6 +21,7 @@ const socket = io('http://43.203.203.28:3000', {
 // response 라는 이벤트명으로 받음 (Message 용)
 socket.on('response', (data) => {
   console.log('response : ', data);
+
   if (data.status === 'fail') {
     alert(data.message);
     location.reload(true);
@@ -30,6 +31,9 @@ socket.on('response', (data) => {
   if (data.broadcast) {
     logsDraw(data.message);
     highScore = Number(data.score);
+  } else {
+    let json = JSON.stringify(data);
+    logsDraw(json);
   }
 });
 
