@@ -40,7 +40,7 @@ export const moveStageHandler = (userId, payload) => {
   //유효시간 = 경과 시간(현재시간-현재 스테이지 진입시간) * 현재 스테이지의 초당 획득 점수
   // const elapsedTime = (serverTime - currentStage.timestamp) / 1000;
   //유효점수 = 유효시간 * 초당 점수
-  const elapsedScore = ((serverTime - currentStage.timestamp) / 0.001) * stages.data[currentStages.length - 1].scorePerSecond;
+  const elapsedScore = ((serverTime - currentStage.timestamp) / 1000) * stages.data[currentStages.length - 1].scorePerSecond;
   // 5-2. 현재 스테이지에서 얻은 아이템의 총 점수 계산
   let sumItemScore = 0;
   const userItems = getItem(userId);
